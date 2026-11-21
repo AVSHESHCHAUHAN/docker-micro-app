@@ -1,62 +1,161 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Docker Micro Web Application</title>
+  <title>DevOps Practical 8 | Docker Micro Web Application</title>
+
   <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #eef2ff; font-family: Arial, sans-serif; color: #1e293b; }
-    .panel { background: white; border-radius: 16px; padding: 42px; max-width: 600px; width: calc(100% - 32px); text-align: center; box-shadow: 0 12px 40px rgba(30, 41, 59, .12); }
-    h1 { color: #2563eb; margin-top: 0; }
-    .badge { display: inline-block; background: #dcfce7; color: #166534; border-radius: 30px; padding: 8px 14px; font-weight: 600; }
-    button { padding: 12px 24px; border: none; border-radius: 8px; color: white; background: #2563eb; font-size: 16px; cursor: pointer; }
-    button:hover { background: #1d4ed8; }
-    #result { min-height: 44px; line-height: 1.5; }
-    .hint { color: #64748b; font-size: 13px; }
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: #eef2ff;
+      font-family: Arial, sans-serif;
+      color: #1e293b;
+    }
+
+    .panel {
+      background: white;
+      border-radius: 16px;
+      padding: 42px;
+      max-width: 600px;
+      width: calc(100% - 32px);
+      text-align: center;
+      box-shadow: 0 12px 40px rgba(30, 41, 59, 0.12);
+    }
+
+    h1 {
+      color: #2563eb;
+      margin: 20px 0;
+      font-size: 30px;
+    }
+
+    h2 {
+      margin: 18px 0;
+    }
+
+    .details {
+      line-height: 1.8;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #cbd5e1;
+      margin: 24px 0;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #dcfce7;
+      color: #166534;
+      border-radius: 30px;
+      padding: 8px 14px;
+      font-weight: 600;
+    }
+
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      background: #2563eb;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    #result {
+      min-height: 44px;
+      line-height: 1.5;
+      margin-top: 20px;
+    }
+
+    .hint {
+      color: #64748b;
+      font-size: 13px;
+      margin-top: 24px;
+    }
   </style>
 </head>
+
 <body>
-  <div style="text-align:center; padding:25px;">
-    <h2>DEVOPS PRACTICAL 8</h2>
+
+  <main class="panel">
+
+    <h2>DEVOPS PRACTICAL</h2>
 
     <h1>Docker-Based Micro Web Application Deployment</h1>
 
     <h2>AVSHESH CHAUHAN</h2>
 
-    <p><strong>Roll No:</strong> 1/23/SET/BCS/554</p>
+    <div class="details">
+      <p><strong>Roll No:</strong> 1/23/SET/BCS/554</p>
 
-    <p><strong>Subject:</strong> DEVOPS</p>
+      <p><strong>Subject:</strong> DEVOPS</p>
 
-    <p><strong>Technologies:</strong>
-       Git, Docker, Jenkins, Node.js, MongoDB
-    </p>
+      <p>
+        <strong>Technologies:</strong>
+        Git, Docker, Jenkins, Node.js, MongoDB
+      </p>
+    </div>
 
     <hr>
-</div>
-  <main class="panel">
-    <h1>Docker Micro Web Application</h1>
+
     <p class="badge">Frontend Service Running</p>
-    <p>Practical 8 — Git, Docker &amp; Jenkins</p>
+
     <p>Click below to check the API and MongoDB connection.</p>
-    <button type="button" onclick="checkAPI()">Check API &amp; Database</button>
-    <h3 id="result" role="status">Waiting for API test...</h3>
-    <p class="hint">Frontend: Nginx | API: Node.js | Database: MongoDB</p>
+
+    <button type="button" onclick="checkAPI()">
+      Check API &amp; Database
+    </button>
+
+    <h3 id="result" role="status">
+      Waiting for API test...
+    </h3>
+
+    <p class="hint">
+      Frontend: Nginx | API: Node.js | Database: MongoDB
+    </p>
+
   </main>
+
   <script>
     async function checkAPI() {
-      const output = document.getElementById('result');
-      output.textContent = 'Checking connection...';
+      const output = document.getElementById("result");
+
+      output.textContent = "Checking connection...";
+      output.style.color = "#2563eb";
+
       try {
-        const response = await fetch('/api/');
+        const response = await fetch("/api/");
         const data = await response.json();
-        output.textContent = data.message;
-        output.style.color = response.ok ? '#166534' : '#b91c1c';
+
+        if (response.ok && data.status === "success") {
+          output.textContent = data.message;
+          output.style.color = "#166534";
+        } else {
+          output.textContent = data.message || "API connection failed";
+          output.style.color = "#b91c1c";
+        }
+
       } catch (error) {
-        output.textContent = 'Cannot reach the API. Check Docker containers.';
-        output.style.color = '#b91c1c';
+        output.textContent = "Cannot reach the API. Check Docker containers.";
+        output.style.color = "#b91c1c";
+        console.error("API Error:", error);
       }
     }
   </script>
+
 </body>
 </html>

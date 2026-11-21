@@ -1,4 +1,4 @@
-# Practical 8 — Docker-Based Micro Web Application Deployment (MongoDB)
+# Docker-Based Micro Web Application Deployment (MongoDB)
 
 Three Docker containers: `frontend` (Nginx), `api` (Node.js/Express + Mongoose), and `database` (MongoDB). Jenkins runs on Windows and manages Docker Compose; no fourth container is required.
 

@@ -1,0 +1,48 @@
+name: docker-micro-app
+
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "127.0.0.1:3000:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build: ./api
+    ports:
+      - "127.0.0.1:3001:3001"
+    environment:
+      PORT: "3001"
+      MONGO_URI: "mongodb://admin:admin123@database:27017/microdb?authSource=admin"
+    depends_on:
+      database:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://127.0.0.1:3001/health',r=>{r.resume();process.exit(r.statusCode===200?0:1)}).on('error',()=>process.exit(1))"]
+      interval: 5s
+      timeout: 4s
+      retries: 12
+
+  database:
+    image: mongo:7
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --quiet --username admin --password admin123 --authenticationDatabase admin --eval 'db.adminCommand({ping:1}).ok' | grep -q 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+      start_period: 10s
+
+volumes:
+  mongo_data:
